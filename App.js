@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, Text, StyleSheet, Pressable, FlatList, Alert} from 'react-native';
+import {SafeAreaView, Text, StyleSheet, Pressable, FlatList, Alert, Modal} from 'react-native';
 import Formulario from './src/components/Formulario';
 import Paciente from './src/components/Paciente';
+import InformacionPaciente from './src/components/InformacionPaciente';
 
 const App = () => {
   // Los hooks se colocan en la parte superior
   const [modal_visible, setModalVisible] = useState(false);
   const [ pacientes, setPacientes ] = useState([]);
   const [ paciente_seleccionado, setPacienteSeleccionado ] = useState({});
+  const [ modalPaciente, setModalPaciente ] = useState(false);
 
   const PacienteEditar = (id) => {
     const PacienteSeleccionado = pacientes.filter(paciente => paciente.id === id );
@@ -36,6 +38,14 @@ const App = () => {
         }
       ]
     )
+  }
+
+  /*====================
+  =    CERRAR MODAL    =
+  ====================*/
+
+  const CerrarModal = () => {
+    setModalVisible(false);
   }
 
   return (
@@ -68,20 +78,35 @@ const App = () => {
                 setModalVisible={setModalVisible}
                 PacienteEditar={PacienteEditar}
                 PacienteEliminar={PacienteEliminar}
+                setModalPaciente={setModalPaciente}
+                setPacienteSeleccionado={setPacienteSeleccionado}
               />
             )
           }}
         />
       }
 
-      <Formulario
-        modalVisible={modal_visible}
-        setModalVisible={setModalVisible}
-        pacientes={pacientes}
-        setPacientes={setPacientes}
-        pacienteSeleccionado={paciente_seleccionado}
-        setPacienteSeleccionado={setPacienteSeleccionado}
-      />
+      { modal_visible && (
+        <Formulario
+          modalVisible={modal_visible}
+          CerrarModal={CerrarModal}
+          pacientes={pacientes}
+          setPacientes={setPacientes}
+          pacienteSeleccionado={paciente_seleccionado}
+          setPacienteSeleccionado={setPacienteSeleccionado}
+        />
+      )}
+
+      <Modal
+        visible={ modalPaciente }
+        animationType='fade'
+      >
+        <InformacionPaciente
+          setPacienteSeleccionado={setPacienteSeleccionado}
+          PacienteSeleccionado={paciente_seleccionado}
+          setModalPaciente={setModalPaciente}
+        />
+      </Modal>
       
     </SafeAreaView>
   );

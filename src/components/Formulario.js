@@ -3,12 +3,12 @@ import {SafeAreaView, Modal, Text, StyleSheet, TextInput, View, ScrollView, Pres
 import DatePicker from 'react-native-date-picker';
 
 const Formulario = ({
-    modalVisible, 
-    setModalVisible, 
+    modalVisible,
     pacientes, 
     setPacientes, 
     pacienteSeleccionado, 
-    setPacienteSeleccionado
+    setPacienteSeleccionado,
+    CerrarModal
 }) => {
 
     const [ paciente, setPaciente ] = useState("");
@@ -26,7 +26,9 @@ const Formulario = ({
             setPropietario(pacienteSeleccionado.propietario);
             setEmail(pacienteSeleccionado.email);
             setTelefono(pacienteSeleccionado.telefono);
-            setFecha(pacienteSeleccionado.fecha);
+            if ( pacienteSeleccionado.fecha !== undefined ) {
+                setFecha(pacienteSeleccionado.fecha);
+            }
             setSintomas(pacienteSeleccionado.sintomas);
         }
     }, [pacienteSeleccionado]);
@@ -68,7 +70,7 @@ const Formulario = ({
             setPacientes([ ...pacientes, NuevoPaciente ]);
         }
 
-        setModalVisible(!modalVisible);
+        CerrarModal();
 
         setId("");
         setPaciente("");
@@ -94,7 +96,7 @@ const Formulario = ({
             <Pressable 
                 style={ styles.btnCancelar }
                 onLongPress={() => {
-                    setModalVisible(!modalVisible);
+                    CerrarModal();
                     setPacienteSeleccionado({});
                     setId("");
                     setPaciente("");
